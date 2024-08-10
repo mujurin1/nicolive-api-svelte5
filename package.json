@@ -1,0 +1,42 @@
+{
+  "name": "vite-chrome-extend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "install:api": "npm i ../nicolive-api-ts/mujurin-nicolive-api-ts-0.0.1.tgz",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "lintFix": "eslint . --fix",
+    "check": "svelte-check --tsconfig ./tsconfig.json"
+  },
+  "devDependencies": {
+    "@bufbuild/protobuf": "^2.0.0",
+    "@bufbuild/protoc-gen-es": "^2.0.0",
+    "@crxjs/vite-plugin": "^2.0.0-beta.21",
+    "@stylistic/eslint-plugin": "^2.4.0",
+    "@stylistic/eslint-plugin-ts": "^2.4.0",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@tsconfig/svelte": "^5.0.4",
+    "@types/chrome": "^0.0.269",
+    "@types/eslint": "^8.56.11",
+    "@typescript-eslint/eslint-plugin": "^7.17.0",
+    "@typescript-eslint/parser": "^7.17.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin": "^1.0.1",
+    "eslint-plugin-svelte": "^2.41.0",
+    "svelte": "^5.0.0-next.175",
+    "svelte-check": "^3.8.4",
+    "tslib": "^2.6.3",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^7.17.0",
+    "vite": "^5.3.5"
+  },
+  "dependencies": {
+    "@bufbuild/buf": "^1.36.0",
+    "@mujurin/nicolive-api-ts": "file:../nicolive-api-ts/mujurin-nicolive-api-ts-0.0.1.tgz"
+  }
+}
