@@ -15,7 +15,7 @@ export interface NicoComment {
 class Nicolive {
   private canSpeak = false;
 
-  public url = $state("https://live.nicovideo.jp/watch/lv345515782");
+  public url = $state("");
   public maxBackwards = $state(50);
 
   public client = $state<NicoliveClient>();
