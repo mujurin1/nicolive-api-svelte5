@@ -39,6 +39,11 @@
 </div>
 
 <style>
+  .comment-list {
+    background-color: ghostwhite;
+    height: 100%;
+  }
+
   .comment {
     display: flex;
     min-height: 30px;

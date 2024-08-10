@@ -35,8 +35,10 @@ export const BouyomiChan = {
   async speak(text: string, name: string | undefined, forceSpeak = false) {
     if (!forceSpeak && !bouyomiChan.isSpeak) return;
 
-    if (bouyomiChan.speakName === "mae") text = name + "。" + text;
-    else if (bouyomiChan.speakName === "ato") text = text + "。" + name;
+    if (name != null) {
+      if (bouyomiChan.speakName === "mae") text = name + "。" + text;
+      else if (bouyomiChan.speakName === "ato") text = text + "。" + name;
+    }
 
     await fetch(`http://localhost:${BouyomiChan.port}/talk?text=${text}`);
   }

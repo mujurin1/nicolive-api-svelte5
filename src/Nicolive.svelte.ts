@@ -21,11 +21,18 @@ class Nicolive {
   public client = $state<NicoliveClient>();
   public comments = $state<NicoComment[]>([]);
 
+  public connectWs = $state(false);
+  public connectComment = $state(false);
+
   public async connect() {
     this.close();
+    this.comments = [];
 
     this.client = await NicoliveClient.create(this.url, "now", this.maxBackwards);
     this.url = this.client.liveId;
+
+    this.client.onWsState.on(event => this.connectWs = event === "open");
+    this.client.onCommentState.on(event => this.connectComment = event === "open");
 
     this.client.onCommentEntry.on(message => {
       if (message === "segment") this.canSpeak = true;
@@ -60,7 +67,7 @@ class Nicolive {
       }
 
       if (this.canSpeak) {
-        void BouyomiChan.speak(content, name ?? userId + "");
+        void BouyomiChan.speak(content, name);
       }
 
       this.comments.push({
@@ -74,7 +81,8 @@ class Nicolive {
       });
     });
 
-    setDebug(this.client);
+    // デバッグ用
+    // setDebug(this.client);
   }
 
   public close() {

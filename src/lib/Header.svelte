@@ -5,20 +5,23 @@
 
   let setting = $state(false);
 
-  async function connect() {
-    await nicolive.connect();
-  }
-  function close() {
-    nicolive.close();
-  }
 </script>
+
+{#snippet connection(text: string, on: boolean)}
+<div class:connect-on={on} class:connect-off={!on}>
+  {text}
+</div>
+{/snippet}
 
 <div class="header">
   <div class="left">
     <div class="head-item">
       <input bind:value={nicolive.url} size="30" />
-      <button type="button" onclick={connect}>接続</button>
-      <button type="button" onclick={close}>切断</button>
+      {#if nicolive.connectComment}
+        <button type="button" onclick={() => nicolive.close()}>切断</button>
+      {:else}
+        <button type="button" onclick={() => nicolive.connect()}>接続</button>
+      {/if}
     </div>
 
     <div class="head-item">
@@ -26,6 +29,13 @@
       <button type="button" onclick={BouyomiChan.switchSpeak}>
         {BouyomiChan.isSpeak ? "ON" : "OFF"}
       </button>
+    </div>
+
+    <div class="head-item" title="ウェブソケットの接続状態">
+      {@render connection("WS:", nicolive.connectWs)}
+    </div>
+    <div class="head-item" title="コメントの受信状態">
+      {@render connection("CO:", nicolive.connectComment)}
     </div>
   </div>
 
@@ -43,28 +53,43 @@
     display: flex;
     justify-content: space-between;
     font-size: 1rem;
+    white-space: nowrap;
 
     & > .left {
       display: flex;
       justify-content: space-between;
-    }
+      white-space: nowrap;
+      width: min-content;
+      overflow: hidden;
+  }
   }
 
   .head-item {
     display: flex;
     margin-right: 10px;
-    flex-wrap: wrap;
     font-size: 1rem;
 
     & > * {
-      margin-right: 10px;
-      align-items: center;
       display: flex;
       align-items: center;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+      }
     }
   }
 
+  .connect-on::after {
+    color: blue;
+    content: "ON";
+  }
+
+  .connect-off::after {
+    color: red;
+    content: "OFF";
+  }
+
   .setting-btn {
-    margin-right: 20px;
+    margin-right: 10px;
   }
 </style>
