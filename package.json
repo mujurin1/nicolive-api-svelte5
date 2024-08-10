@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "install:api": "npm i ../nicolive-api-ts/mujurin-nicolive-api-ts-0.0.1.tgz",
     "build": "vite build",
+    "install:api": "npm i ../nicolive-api-ts/mujurin-nicolive-api-ts-0.0.1.tgz",
     "preview": "vite preview",
     "lint": "eslint .",
     "lintFix": "eslint . --fix",
@@ -33,7 +33,8 @@
     "tslib": "^2.6.3",
     "typescript": "^5.5.4",
     "typescript-eslint": "^7.17.0",
-    "vite": "^5.3.5"
+    "vite": "^5.3.5",
+    "vite-plugin-zip-pack": "^1.2.3"
   },
   "dependencies": {
     "@bufbuild/buf": "^1.36.0",

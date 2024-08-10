@@ -1,6 +1,7 @@
 import { crx, defineManifest } from "@crxjs/vite-plugin";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { defineConfig } from "vite";
+import zipPack from "vite-plugin-zip-pack";
 
 
 // https://crxjs.dev/vite-plugin/concepts/manifest
@@ -37,15 +38,7 @@ export default defineConfig({
   plugins: [
     svelte(),
     crx({ manifest }),
-    // viteStaticCopy({
-    //   targets: [
-    //     // ここにコピー元とコピー先のパスを記述
-    //     {
-    //       src: "./index.html",
-    //       dest: ".",
-    //     },
-    //   ],
-    // }),
+    zipPack({ outDir: "." }),
   ],
 
   build: {
