@@ -1,9 +1,12 @@
 import { NicoliveClient, timestampToMs } from "@mujurin/nicolive-api-ts";
+import type { ChunkedMessage } from "@mujurin/nicolive-api-ts/build/gen/dwango_pb";
 import { iconNone, timeString } from "../utils";
 import { BouyomiChan } from "./BouyomiChan.svelte";
 import { store } from "./store.svelte";
 
-export interface NicoComment {
+export interface NicoliveComment {
+  type: "listener" | "owner" | "system";
+
   commentId: string;
   no?: number;
   iconUrl?: string;
@@ -17,11 +20,11 @@ class _Nicolive {
   private _canSpeak = false;
 
   public url = $state("");
-  public get maxBackwards() { return store.connection.maxBackwards; }
-  public set maxBackwards(value) { store.connection.maxBackwards = value; }
+  public get maxBackwards() { return store.nicolive.maxBackwards; }
+  public set maxBackwards(value) { store.nicolive.maxBackwards = value; }
 
   public client = $state<NicoliveClient>();
-  public comments = $state<NicoComment[]>([]);
+  public comments = $state<NicoliveComment[]>([]);
 
   public connectWs = $state(false);
   public connectComment = $state(false);
@@ -41,51 +44,19 @@ class _Nicolive {
       if (message === "segment") this._canSpeak = true;
     });
 
-    this.client.onComment.on(({ meta, payload }) => {
-      if (meta == null) return;
-
-      const commentId = meta.id!;
-      let no: number | undefined;
-      let iconUrl: string | undefined;
-      let userId: string | number | undefined;
-      let name: string | undefined;
-      const time = timestampToMs(meta.at!) - this.client!.beginTime.getTime();
-      let content: string;
-
-      if (payload.case === "message") {
-        const data = payload.value.data;
-        if (data.case !== "chat") return;
-
-        no = data.value.no;
-        userId = data.value.hashedUserId ?? Number(data.value.rawUserId)!;
-        iconUrl = userIdToIconUrl(userId);
-        name = data.value.name;
-        content = data.value.content;
-      } else {
-        if (payload.case !== "state") return;
-
-        const display = payload.value.marquee?.display;
-        if (display?.operatorComment == null) return;
-        content = display.operatorComment.content!;
-      }
+    this.client.onComment.on((message) => {
+      const comment = chunkedMessageToComment(message, this);
+      if (comment == null) return;
 
       if (this._canSpeak) {
-        void BouyomiChan.speak(content, name);
+        void BouyomiChan.speak(comment);
       }
 
-      this.comments.push({
-        commentId,
-        no,
-        iconUrl,
-        userId,
-        name,
-        time: timeString(time),
-        content,
-      });
+      this.comments.push(comment);
     });
 
     // デバッグ用
-    // setDebug(this.client);
+    setDebug(this.client);
   }
 
   public close() {
@@ -94,16 +65,69 @@ class _Nicolive {
   }
 
   // デバッグ用
-  public addComment(...comments: NicoComment[]) {
+  public addComment(...comments: NicoliveComment[]) {
     this.comments.push(...comments);
   }
 }
 
 export const Nicolive = new _Nicolive();
 
+function chunkedMessageToComment({ meta, payload }: ChunkedMessage, nicolive: _Nicolive): NicoliveComment | undefined {
+  if (meta == null) return;
 
-function userIdToIconUrl(userId: string | number) {
-  if (typeof userId === "string") return iconNone;
+  const commentId = meta.id!;
+  let type: NicoliveComment["type"];
+  let no: number | undefined;
+  let iconUrl: string | undefined;
+  let userId: string | number | undefined;
+  let name: string | undefined;
+  const time = timestampToMs(meta.at!) - nicolive.client!.beginTime.getTime();
+  let content: string;
+
+  if (payload.case === "message") {
+    const data = payload.value.data;
+    if (data.case === "chat") {
+      type = "listener";
+      no = data.value.no;
+      userId = data.value.hashedUserId ?? Number(data.value.rawUserId)!;
+      iconUrl = userIdToIconUrl(userId);
+      name = data.value.name;
+      content = data.value.content;
+    } else if (data.case === "nicoad") {
+      return; // TODO:
+    } else if (data.case === "gift") {
+      return; // TODO:
+    } else if (data.case === "simpleNotification") {
+      type = "system";
+      content = data.value.message.value!;
+    } else return;
+  } else {
+    if (payload.case !== "state") return;
+
+    type = "owner";
+    const display = payload.value.marquee?.display;
+    if (display?.operatorComment == null) return;
+    userId = nicolive.client!.ownerId;
+    iconUrl = userIdToIconUrl(userId);
+    name = nicolive.client!.ownerName;
+    content = display.operatorComment.content!;
+  }
+
+  return {
+    type,
+    commentId,
+    no,
+    iconUrl,
+    userId,
+    name,
+    time: timeString(time),
+    content,
+  };
+}
+
+
+function userIdToIconUrl(userId?: string | number) {
+  if (typeof userId !== "number") return iconNone;
 
   const numStr = userId.toString();
 

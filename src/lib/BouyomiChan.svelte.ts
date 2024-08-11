@@ -1,3 +1,4 @@
+import type { NicoliveComment } from "./Nicolive.svelte";
 import { store } from "./store.svelte";
 
 export const SpeakName = ["none", "mae", "ato"] as const;
@@ -10,20 +11,27 @@ export class BouyomiChan {
   public static set isSpeak(value) { store.bouyomiChan.isSpeak = value; }
   public static get speakName() { return store.bouyomiChan.speakName; }
   public static set speakName(value) { store.bouyomiChan.speakName = value; }
+  public static get speakSystem() { return store.bouyomiChan.speakSystem; }
+  public static set speakSystem(value) { store.bouyomiChan.speakSystem = value; }
 
   public static switchSpeak() {
     BouyomiChan.isSpeak = !BouyomiChan.isSpeak;
   }
 
-  public static async speak(text: string, name: string | undefined, forceSpeak = false) {
-    if (!forceSpeak && !BouyomiChan.isSpeak) return;
+  public static async speak({ type, name, content, }: NicoliveComment, forceSpeak = false) {
+    if (!(
+      forceSpeak ||
+      BouyomiChan.isSpeak && (
+        (type !== "system" || BouyomiChan.speakSystem)
+      )
+    )) return;
 
     if (name != null) {
-      if (BouyomiChan.speakName === "mae") text = name + "。" + text;
-      else if (BouyomiChan.speakName === "ato") text = text + "。" + name;
+      if (BouyomiChan.speakName === "mae") content = name + "。" + content;
+      else if (BouyomiChan.speakName === "ato") content = content + "。" + name;
     }
 
-    await fetch(`http://localhost:${BouyomiChan.port}/talk?text=${text}`);
+    await fetch(`http://localhost:${BouyomiChan.port}/talk?text=${content}`);
   }
 }
 

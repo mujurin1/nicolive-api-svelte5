@@ -7,8 +7,9 @@ export const store = $state({
     port: 50080,
     isSpeak: false,
     speakName: "none" as SpeakName,
+    speakSystem: false,
   },
-  connection: {
+  nicolive: {
     maxBackwards: 50,
   },
 });

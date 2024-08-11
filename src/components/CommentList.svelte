@@ -52,7 +52,7 @@
     border-bottom: 1px solid black;
 
     & > .child {
-      margin-right: 4px;
+      margin-right: 6px;
       display: flex;
       align-items: center;
     }

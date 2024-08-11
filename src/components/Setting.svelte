@@ -1,8 +1,20 @@
 <script lang="ts">
   import { BouyomiChan } from "../lib/BouyomiChan.svelte";
-  import { Nicolive } from "../lib/Nicolive.svelte";
+  import { Nicolive, type NicoliveComment } from "../lib/Nicolive.svelte";
 
   let bouyomiTest = $state<"none" | "try" | "miss" | "ok">("none");
+
+  function testSpeak() {
+    bouyomiTest = "try";
+    const comment = {
+      type: "listener",
+      content: "テストです",
+      name: "ユーザー名",
+    } as NicoliveComment;
+    BouyomiChan.speak(comment, true)
+      .then(() => (bouyomiTest = "ok"))
+      .catch(() => (bouyomiTest = "miss"));
+  }
 </script>
 
 <div class="setting-panel">
@@ -23,21 +35,18 @@
   </div>
 
   <div class="box">
+    <div class="text">システムメッセージの読み上げ</div>
+    <input type="checkbox" class="port" bind:checked={BouyomiChan.speakSystem} />
+  </div>
+
+  <div class="box">
     <div class="text">接続時に取得する過去コメント数</div>
     <input type="number" bind:value={Nicolive.maxBackwards} />
   </div>
 
   <div class="box">
     <div class="text">棒読みちゃんテスト</div>
-    <button
-      type="button"
-      onclick={() => {
-        bouyomiTest = "try";
-        BouyomiChan.speak("テスト", "ユーザー名", true)
-          .then(() => (bouyomiTest = "ok"))
-          .catch(() => (bouyomiTest = "miss"));
-      }}>よみあげる</button
-    >
+    <button type="button" onclick={testSpeak}>よみあげる</button>
   </div>
 
   <div>
@@ -91,7 +100,10 @@
     width: 140px;
   }
 
-  input {
+  input[type="number"] {
     width: 80px;
+  }
+  input[type="checkbox"] {
+    width: 24px;
   }
 </style>
