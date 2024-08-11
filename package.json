@@ -1,12 +1,12 @@
 {
   "name": "vite-chrome-extend",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "install:api": "npm i ../nicolive-api-ts/mujurin-nicolive-api-ts-0.0.1.tgz",
+    "install:api": "npm link ../NDGRClient-ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "lintFix": "eslint . --fix",
@@ -37,7 +37,6 @@
     "vite-plugin-zip-pack": "^1.2.3"
   },
   "dependencies": {
-    "@bufbuild/buf": "^1.36.0",
-    "@mujurin/nicolive-api-ts": "file:../nicolive-api-ts/mujurin-nicolive-api-ts-0.0.1.tgz"
+    "@bufbuild/buf": "^1.36.0"
   }
 }
