@@ -1,6 +1,6 @@
 import { NicoliveClient, timestampToMs } from "@mujurin/nicolive-api-ts";
 import { BouyomiChan } from "./bouyomiChan.svelte";
-import { iconNone } from "./utils";
+import { iconNone, timeString } from "./utils";
 
 export interface NicoComment {
   commentId: string;
@@ -46,7 +46,7 @@ class Nicolive {
       let iconUrl: string | undefined;
       let userId: string | number | undefined;
       let name: string | undefined;
-      const time = new Date(timestampToMs(meta.at!)).toLocaleTimeString();
+      const time = timestampToMs(meta.at!) - this.client!.beginTime.getTime();
       let content: string;
 
       if (payload.case === "message") {
@@ -76,7 +76,7 @@ class Nicolive {
         iconUrl,
         userId,
         name,
-        time,
+        time: timeString(time),
         content,
       });
     });

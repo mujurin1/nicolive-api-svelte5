@@ -8,7 +8,7 @@ import zipPack from "vite-plugin-zip-pack";
 const manifest = defineManifest({
   manifest_version: 3,
   name: "Comment Viewer",
-  version: "0.0.1",
+  version: "0.0.3",
   permissions: ["cookies", "storage"],
   action: {
     // default_popup: "index.html",

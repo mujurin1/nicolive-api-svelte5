@@ -56,8 +56,6 @@ void chrome.storage.local.get("bouyomiChan")
     const bc = value?.bouyomiChan as BouyomiChan;
     if (bc == null) return;
 
-    console.log(bc);
-
     bouyomiChan.port = bc.port ?? bouyomiChan.port;
     bouyomiChan.isSpeak = bc.isSpeak ?? bouyomiChan.isSpeak;
     bouyomiChan.speakName = bc.speakName ?? bouyomiChan.speakName;
