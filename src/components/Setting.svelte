@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { BouyomiChan } from "../bouyomiChan.svelte";
-  import { nicolive } from "../Nicolive.svelte";
+  import { BouyomiChan } from "../lib/BouyomiChan.svelte";
+  import { Nicolive } from "../lib/Nicolive.svelte";
 
   let bouyomiTest = $state<"none" | "try" | "miss" | "ok">("none");
 </script>
@@ -24,7 +24,7 @@
 
   <div class="box">
     <div class="text">接続時に取得する過去コメント数</div>
-    <input type="number" bind:value={nicolive.maxBackwards} />
+    <input type="number" bind:value={Nicolive.maxBackwards} />
   </div>
 
   <div class="box">

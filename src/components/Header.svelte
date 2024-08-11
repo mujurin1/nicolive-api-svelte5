@@ -1,10 +1,9 @@
 <script lang="ts">
-  import { BouyomiChan } from "../bouyomiChan.svelte";
-  import { nicolive } from "../Nicolive.svelte";
+  import { BouyomiChan } from "../lib/BouyomiChan.svelte";
+  import { Nicolive } from "../lib/Nicolive.svelte";
   import Setting from "./Setting.svelte";
 
   let setting = $state(false);
-
 </script>
 
 {#snippet connection(text: string, on: boolean)}
@@ -16,11 +15,11 @@
 <div class="header">
   <div class="left">
     <div class="head-item">
-      <input bind:value={nicolive.url} size="30" />
-      {#if nicolive.connectComment}
-        <button type="button" onclick={() => nicolive.close()}>切断</button>
+      <input bind:value={Nicolive.url} size="30" />
+      {#if Nicolive.connectComment}
+        <button type="button" onclick={() => Nicolive.close()}>切断</button>
       {:else}
-        <button type="button" onclick={() => nicolive.connect()}>接続</button>
+        <button type="button" onclick={() => Nicolive.connect()}>接続</button>
       {/if}
     </div>
 
@@ -32,10 +31,10 @@
     </div>
 
     <div class="head-item" title="ウェブソケットの接続状態">
-      {@render connection("WS:", nicolive.connectWs)}
+      {@render connection("WS:", Nicolive.connectWs)}
     </div>
-    <div class="head-item" title="コメントの受信状態">
-      {@render connection("CO:", nicolive.connectComment)}
+    <div class="head-item" title="メッセージ(コメント)サーバーとの接続状態">
+      {@render connection("CO:", Nicolive.connectComment)}
     </div>
   </div>
 

@@ -1,12 +1,12 @@
 <script lang="ts">
   import { tick } from "svelte";
-  import { nicolive } from "../Nicolive.svelte";
+  import { Nicolive } from "../lib/Nicolive.svelte";
   import { iconNone } from "../utils";
 
   let listView: HTMLDivElement;
 
   $effect.pre(() => {
-    nicolive.comments.length;
+    Nicolive.comments.length;
 
     const autoscroll =
       listView && listView.offsetHeight + listView.scrollTop > listView.scrollHeight - 50;
@@ -25,7 +25,7 @@
 </script>
 
 <div bind:this={listView} class="comment-list">
-  {#each nicolive.comments as comment}
+  {#each Nicolive.comments as comment}
     <div class="comment">
       <div class="child no">{comment.no}</div>
       <div class="child icon">

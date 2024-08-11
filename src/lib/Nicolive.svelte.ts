@@ -1,6 +1,7 @@
 import { NicoliveClient, timestampToMs } from "@mujurin/nicolive-api-ts";
-import { BouyomiChan } from "./bouyomiChan.svelte";
-import { iconNone, timeString } from "./utils";
+import { iconNone, timeString } from "../utils";
+import { BouyomiChan } from "./BouyomiChan.svelte";
+import { store } from "./store.svelte";
 
 export interface NicoComment {
   commentId: string;
@@ -12,11 +13,12 @@ export interface NicoComment {
   content: string;
 }
 
-class Nicolive {
-  private canSpeak = false;
+class _Nicolive {
+  private _canSpeak = false;
 
   public url = $state("");
-  public maxBackwards = $state(50);
+  public get maxBackwards() { return store.connection.maxBackwards; }
+  public set maxBackwards(value) { store.connection.maxBackwards = value; }
 
   public client = $state<NicoliveClient>();
   public comments = $state<NicoComment[]>([]);
@@ -25,7 +27,7 @@ class Nicolive {
   public connectComment = $state(false);
 
   public async connect() {
-    this.canSpeak = false;
+    this._canSpeak = false;
     this.close();
     this.comments = [];
 
@@ -36,7 +38,7 @@ class Nicolive {
     this.client.onCommentState.on(event => this.connectComment = event === "open");
 
     this.client.onCommentEntry.on(message => {
-      if (message === "segment") this.canSpeak = true;
+      if (message === "segment") this._canSpeak = true;
     });
 
     this.client.onComment.on(({ meta, payload }) => {
@@ -67,7 +69,7 @@ class Nicolive {
         content = display.operatorComment.content!;
       }
 
-      if (this.canSpeak) {
+      if (this._canSpeak) {
         void BouyomiChan.speak(content, name);
       }
 
@@ -97,7 +99,7 @@ class Nicolive {
   }
 }
 
-export const nicolive = new Nicolive();
+export const Nicolive = new _Nicolive();
 
 
 function userIdToIconUrl(userId: string | number) {

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "publish-build": "vite build",
     "install:api": "npm link ../NDGRClient-ts",
     "preview": "vite preview",
     "lint": "eslint .",

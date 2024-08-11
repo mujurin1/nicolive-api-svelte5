@@ -1,6 +1,6 @@
 <script lang="ts">
-  import CommentList from "./lib/CommentList.svelte";
-  import Header from "./lib/Header.svelte";
+  import CommentList from "./components/CommentList.svelte";
+  import Header from "./components/Header.svelte";
 </script>
 
 <main>
