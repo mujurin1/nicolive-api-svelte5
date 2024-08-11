@@ -25,6 +25,7 @@ class Nicolive {
   public connectComment = $state(false);
 
   public async connect() {
+    this.canSpeak = false;
     this.close();
     this.comments = [];
 
