@@ -4,13 +4,14 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "publish-build": "vite build",
+    "dev": "rimraf ./dist && vite",
+    "publish-build": "npm run clean && vite build",
     "install:api": "npm link ../NDGRClient-ts",
     "preview": "vite preview",
     "lint": "eslint .",
     "lintFix": "eslint . --fix",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "clean": "rimraf ./dist && rimraf ./dist.zip"
   },
   "devDependencies": {
     "@bufbuild/protobuf": "^2.0.0",
@@ -28,6 +29,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin": "^1.0.1",
     "eslint-plugin-svelte": "^2.41.0",
+    "rimraf": "^6.0.1",
     "svelte": "^5.0.0-next.175",
     "svelte-check": "^3.8.4",
     "tslib": "^2.6.3",

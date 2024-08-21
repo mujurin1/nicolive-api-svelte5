@@ -7,8 +7,11 @@ import zipPack from "vite-plugin-zip-pack";
 // https://crxjs.dev/vite-plugin/concepts/manifest
 const manifest = defineManifest({
   manifest_version: 3,
-  name: "Comment Viewer",
+  name: "ニコ生コメビュ",
   version: "0.0.3",
+  icons: {
+    128: "assets/128x128.png",
+  },
   permissions: ["cookies", "storage"],
   action: {
     // default_popup: "index.html",

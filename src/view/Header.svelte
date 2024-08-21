@@ -1,21 +1,39 @@
 <script lang="ts">
-  import { BouyomiChan } from "../lib/BouyomiChan.svelte";
-  import { Nicolive } from "../lib/Nicolive.svelte";
+  import { Nicolive } from "../store/Nicolive.svelte";
+  import { store } from "../store/store.svelte";
   import Setting from "./Setting.svelte";
 
-  let setting = $state(false);
+  let showSetting = $state(false);
+
+  let openTabs = $state<chrome.tabs.Tab[]>([]);
+  
+  chrome.tabs.query({}, tabs => {
+    openTabs = tabs.filter(tab => tab?.url?.includes("https://live.nicovideo.jp/watch"));
+  });
 </script>
 
 {#snippet connection(text: string, on: boolean)}
-<div class:connect-on={on} class:connect-off={!on}>
-  {text}
-</div>
+  <div class:connect-on={on} class:connect-off={!on}>
+    {text}
+  </div>
 {/snippet}
 
 <div class="header">
   <div class="left">
-    <div class="head-item">
-      <input bind:value={Nicolive.url} size="30" />
+    <div class="head-item connect-item">
+      <input bind:value={Nicolive.url}
+        size="18"
+        placeholder="URL (lv ch user/)"
+        />
+        <!-- list="tabList" -->
+
+      <!-- <datalist id="tabList">
+        {#each openTabs as tab (getNicoliveId(tab.url!))}
+          <option value={getNicoliveId(tab.url!)}>
+            {tab.title}
+          </option>
+        {/each}
+      </datalist> -->
       {#if Nicolive.connectComment}
         <button type="button" onclick={() => Nicolive.close()}>切断</button>
       {:else}
@@ -24,10 +42,8 @@
     </div>
 
     <div class="head-item">
-      <div style="margin-right: 5px">棒読みちゃん</div>
-      <button type="button" onclick={BouyomiChan.switchSpeak}>
-        {BouyomiChan.isSpeak ? "ON" : "OFF"}
-      </button>
+      <label for="speak">読み上げ</label>
+      <input type="checkbox" id="speak" bind:checked={store.yomiage.isSpeak} />
     </div>
 
     <div class="head-item" title="ウェブソケットの接続状態">
@@ -38,14 +54,12 @@
     </div>
   </div>
 
-  <button class="setting-btn" type="button" onclick={() => (setting = !setting)}>
-    設定いろいろ
+  <button class="setting-btn" type="button" onclick={() => (showSetting = !showSetting)}>
+    設定
   </button>
 </div>
 
-{#if setting}
-  <Setting />
-{/if}
+<Setting bind:show={showSetting} />
 
 <style>
   .header {
@@ -53,6 +67,7 @@
     justify-content: space-between;
     font-size: 1rem;
     white-space: nowrap;
+    margin: 2px 4px;
 
     & > .left {
       display: flex;
@@ -60,20 +75,31 @@
       white-space: nowrap;
       width: min-content;
       overflow: hidden;
-  }
+    }
   }
 
   .head-item {
     display: flex;
-    margin-right: 10px;
     font-size: 1rem;
 
-    & > * {
+    &:not(:last-child) {
+      margin-right: 10px;
+    }
+
+    &:not(.connect-item) {
+      border-bottom: 2px solid dimgray;
+    }
+
+    &.connect-item {
+      margin-right: 20px;
+    }
+
+    & > *:not(datalist) {
       display: flex;
       align-items: center;
 
       &:not(:last-child) {
-        margin-right: 10px;
+        margin-right: 5px;
       }
     }
   }
