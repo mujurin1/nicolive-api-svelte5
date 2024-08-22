@@ -1,7 +1,12 @@
-**現在Chrome拡張機能ストアの承認待ちです**\
-Chrome拡張機能ストアで公開されたらこちらのリポジトリをアーカイブにします\
-作業は[こちら](https://github.com/mujurin1/nicolive-comeview-extension)のリポジトリに引き継いで行われます
+# **現在Chrome拡張機能ストアに公開されました**
 
+拡張機能ストアは[こちら](https://chromewebstore.google.com/detail/hggilkgnnelecejiioikdhhcomakjbpm)
+
+Chrome拡張機能ストアで公開されたためこちらのリポジトリをアーカイブにします\
+以降は[新しいリポジトリ](https://github.com/mujurin1/nicolive-comeview-extension)に引き継いで行われます
+
+
+## 以降は過去のりーどみー記述内容です
 帰ってきたニコニコバージョンのニコニコ生放送に対応したChromium系ブラウザ専用のコメントビューアです\
 棒読みちゃんでの読み上げにも対応しています
 
